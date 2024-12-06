@@ -1,10 +1,9 @@
 import React from "react";
-import { useProductModal } from "../../../contexts/ProductModalContext";
+import { useProductModal } from "@/contexts/productModalContext/ProductModalContext";
 
 const ProductModal: React.FC = () => {
   const { product, closeModal, isOpen } = useProductModal();
 
-  // Verifica se o modal está aberto e se o produto está definido
   if (!isOpen || !product) return null;
 
   return (
@@ -26,7 +25,6 @@ const ProductModal: React.FC = () => {
             <h2 className="text-3xl font-bold mb-4">{product.name}</h2>
             <p className="text-gray-400 mb-4">{product.description}</p>
             <div className="flex items-center mb-4">
-              {/* Exibição de estrelas de avaliação */}
               <span className="flex text-yellow-500">
                 {Array.from({ length: 5 }, (_, index) => (
                   <svg
@@ -46,9 +44,12 @@ const ProductModal: React.FC = () => {
               </span>
               <span className="text-gray-400">({product.rating} / 5)</span>
             </div>
+
             <p className="text-xl font-semibold text-yellow-500 mb-4">
-              {product.price}
-            </p>
+            {new Intl.NumberFormat("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  }).format(product.price)}            </p>
             <p className="text-gray-400 mb-4">
               {product.stock > 0 ? `Em estoque: ${product.stock} unidades` : "Produto fora de estoque"}
             </p>
