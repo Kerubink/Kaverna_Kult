@@ -1,21 +1,26 @@
 import React from "react";
 import { useProductModal } from "@/contexts/productModalContext/ProductModalContext";
-import { useCart } from "@/contexts/cartContext/cartContext";
 
 const products = Array.from({ length: 8 }).map((_, index) => ({
   id: index + 1,
   name: `Produto ${index + 1}`,
   description: `Descrição detalhada do Produto ${index + 1}.`,
   price: (index + 1) * 10,
+  image: `https://via.placeholder.com/150?text=Produto+${index + 1}`, 
+  colors: ["Preto", "Branco", "Azul", "Vermelho"], 
+  sizes: ["P", "M", "G", "GG"],
+  stock: 20, 
+  rating: Math.floor(Math.random() * 5) + 1,
+  shippingDetails: "Entrega em até 7 dias úteis.",
+  gallery: [
+    `https://via.placeholder.com/150?text=Produto+${index + 1}+1`,
+    `https://via.placeholder.com/150?text=Produto+${index + 1}+2`,
+    `https://via.placeholder.com/150?text=Produto+${index + 1}+3`,
+  ], 
 }));
-
 const ProductsSection: React.FC = () => {
   const { openModal } = useProductModal();
-  const { addToCart } = useCart();
-
-  const handleAddToCart = (product) => {
-    addToCart(product);
-  };
+  
 
   return (
     <section className="w-full min-h-screen bg-black text-white py-8">
@@ -43,12 +48,6 @@ const ProductsSection: React.FC = () => {
                   }).format(product.price)}
                 </p>
                 <div className="flex items-center gap-2 mt-4">
-                  <button
-                    className="flex-1 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-500"
-                    onClick={() => handleAddToCart(product)}
-                  >
-                    Adicionar ao Carrinho
-                  </button>
                   <button
                     className="p-2 bg-gray-700 rounded-md hover:bg-gray-600"
                     onClick={() => openModal(product)}

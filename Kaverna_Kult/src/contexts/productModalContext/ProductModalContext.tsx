@@ -5,6 +5,8 @@ type Product = {
   name: string;
   description: string;
   price: number;
+  colors: string[];
+  sizes: string[];
   image: string; 
   gallery: string[]; 
   rating: number; 

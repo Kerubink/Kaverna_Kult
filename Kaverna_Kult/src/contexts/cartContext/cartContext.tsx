@@ -3,16 +3,28 @@ import React, { createContext, useState, useEffect, useContext } from "react";
 type Product = {
   id: number;
   name: string;
-  price: number; 
+  description: string;
+  price: number;
+  colors: string[];
+  sizes: string[];
+  image: string;
+  selectedColor: string;
+  selectedSize: string;
+  gallery: string[];
+  rating: number;
+  stock: number;
   quantity: number;
+  shippingDetails: string;
+  isSelected: boolean; 
 };
 
 type CartContextProps = {
   cart: Product[];
   addToCart: (product: Product) => void;
-  removeFromCart: (id: number) => void;
+  removeFromCart: (id: number, selectedColor: string, selectedSize: string) => void;
   updateQuantity: (id: number, quantity: number) => void;
   clearCart: () => void;
+  toggleSelection: (id: number, selectedColor: string, selectedSize: string) => void; 
 };
 
 const CartContext = createContext<CartContextProps | undefined>(undefined);
@@ -31,22 +43,41 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   }, [cart]);
 
   const addToCart = (product: Product) => {
-    const existingProduct = cart.find((item) => item.id === product.id);
+    const existingProduct = cart.find(
+      (item) =>
+        item.id === product.id &&
+        item.selectedColor === product.selectedColor &&
+        item.selectedSize === product.selectedSize
+    );
+
     if (existingProduct) {
       setCart(
         cart.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
+          item.id === product.id &&
+          item.selectedColor === product.selectedColor &&
+          item.selectedSize === product.selectedSize
+            ? { ...item, quantity: item.quantity + product.quantity } 
             : item
         )
       );
     } else {
-      setCart([...cart, { ...product, quantity: 1 }]);
+      setCart([...cart, product]);
     }
   };
 
-  const removeFromCart = (id: number) => {
-    setCart(cart.filter((item) => item.id !== id));
+  const removeFromCart = (
+    id: number,
+    selectedColor: string,
+    selectedSize: string
+  ) => {
+    setCart(
+      cart.filter(
+        (item) =>
+          item.id !== id ||
+          item.selectedColor !== selectedColor ||
+          item.selectedSize !== selectedSize
+      )
+    );
   };
 
   const updateQuantity = (id: number, quantity: number) => {
@@ -62,9 +93,21 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     setCart([]);
   };
 
+  const toggleSelection = (id: number, selectedColor: string, selectedSize: string) => {
+    setCart(
+      cart.map((item) =>
+        item.id === id &&
+        item.selectedColor === selectedColor &&
+        item.selectedSize === selectedSize
+          ? { ...item, isSelected: !item.isSelected } 
+          : item
+      )
+    );
+  };
+
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart }}
+      value={{ cart, addToCart, removeFromCart, updateQuantity, toggleSelection, clearCart }}
     >
       {children}
     </CartContext.Provider>

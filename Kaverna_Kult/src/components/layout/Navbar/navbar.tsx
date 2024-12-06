@@ -77,7 +77,7 @@ function Navbar() {
                 <SheetTitle>Meu carrinho</SheetTitle>
                 
               </SheetHeader>
-              <SheetDescription className="flex flex-1 overflow-auto">
+              <SheetDescription className="flex flex-col flex-1 overflow-auto">
                   <Cart />
                 </SheetDescription>
             </SheetContent>
