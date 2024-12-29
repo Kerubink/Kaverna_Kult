@@ -1,4 +1,4 @@
-import { ProductModalProvider } from "@/contexts/ProductModalContext";
+import { ProductModalProvider } from "@/contexts/productModalContext/ProductModalContext";
 import ProductsSection from "@/components/layout/ProductsSection/ProductsSection";
 import ProductModal from "@/components/product/productModal/ProductModal";
 
