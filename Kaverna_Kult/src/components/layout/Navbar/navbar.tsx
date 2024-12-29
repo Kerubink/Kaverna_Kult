@@ -83,7 +83,7 @@ function Navbar() {
             </SheetContent>
           </Sheet>
 
-          <button className="md:hidden p-2 text-white" onClick={toggleMenu}>
+          {/* <button className="md:hidden p-2 text-white" onClick={toggleMenu}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -99,19 +99,19 @@ function Navbar() {
                 d="M4 6h16M4 12h16M4 18h16"
               />
             </svg>
-          </button>
+          </button> */}
         </div>
       </div>
 
-      <Separator className="bg-white" />
+      {/* <Separator className="bg-white" /> */}
 
-      <div
+      {/* <div
         className={`flex justify-center ${isMenuOpen ? "hidden" : "md:block"}`}
       >
         <NavigationMenuComponent />
-      </div>
+      </div> */}
 
-      {isMenuOpen && (
+      {/* {isMenuOpen && (
         <div className="md:hidden bg-black text-white p-4">
           <div className="flex flex-col gap-3">
             <a href="/" className="text-white py-2">
@@ -128,7 +128,7 @@ function Navbar() {
             </a>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }
