@@ -11,7 +11,7 @@ import ProductForm from "@/pages/admin/dashboardAdmin"
 function App() {
   return (
     <CartProvider> 
-      <div className="flex flex-col min-h-screen relative">
+      <div className="flex flex-col min-h-screen relative bg-black">
         <Navbar />
 
         <main className="flex-1">

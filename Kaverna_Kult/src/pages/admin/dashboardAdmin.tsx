@@ -6,6 +6,7 @@ const ProductForm = () => {
   const [product, setProduct] = useState({
     name: "",
     description: "",
+    collection: "",
     price: "",
     colors: "",
     sizes: "",
@@ -36,6 +37,7 @@ const ProductForm = () => {
       setProduct({
         name: "",
         description: "",
+        collection: "",
         price: "",
         colors: "",
         sizes: "",
@@ -55,6 +57,13 @@ const ProductForm = () => {
         value={product.name}
         onChange={handleChange}
         placeholder="Nome do produto"
+        className="p-2 border rounded"
+      />
+      <input
+        name="collection"
+        value={product.collection}
+        onChange={handleChange}
+        placeholder="Coleção do produto"
         className="p-2 border rounded"
       />
       <textarea
