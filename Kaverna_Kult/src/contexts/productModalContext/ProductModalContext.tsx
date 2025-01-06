@@ -8,6 +8,7 @@ type Product = {
   colors: string[];
   sizes: string[];
   image: string; 
+  collection: string;
   gallery: string[]; 
   rating: number; 
   stock: number;

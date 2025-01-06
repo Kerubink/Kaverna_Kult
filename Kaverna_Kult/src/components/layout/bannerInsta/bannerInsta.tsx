@@ -15,7 +15,7 @@ function BannerInsta() {
 
             {/* Container de Imagens */}
             <div className="flex gap-1  justify-center items-center">
-              {Array.from({ length: 7 }).map((_, index) => (
+              {Array.from({ length: 3 }).map((_, index) => (
                 <div
                   key={index}
                   className={`w-1/4 bg-slate-600 ${

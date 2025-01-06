@@ -19,7 +19,7 @@ function Navbar() {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
-    <div className=" p-3 flex flex-col gap-3  sticky top-2 rounded-lg z-50 m-3 backdrop-blur-xl bg-black/50 text-white">
+    <div className="p-3 flex flex-col gap-3 fixed left-1/2 top-2 translate-x-[-50%] w-[95%] rounded-lg z-50 backdrop-blur-xl bg-black/50 text-white">
       <div className="flex items-center justify-between gap-4 relative">
         <img src="logo.png" alt="Logo" className="w-10 h-10" />
 

@@ -8,7 +8,7 @@ const ProductsSection: React.FC = () => {
   const [products, setProducts] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [filter, setFilter] = useState<string>("Todos"); // Filtro por tipo de estampa
-  const productsPerPage = 12;
+  const productsPerPage = 6;
 
   // Tipos de estampa para o filtro
   const estampas = ["Todos", "Floral", "Geométrica", "Abstrata", "Listrada"];
@@ -56,7 +56,8 @@ const ProductsSection: React.FC = () => {
   };
 
   return (
-    <section className="w-full flex flex-col min-h-screen bg-black text-white py-8">
+    <section className="w-full flex flex-col min-h-screen bg-black text-white">
+      <h1 className="text-xl p-2 font-bold mb-2">Produtos</h1>
       {/* Filtro por Tipo de Estampa */}
       <div className="flex overflow-auto gap-2 p-2">
         {estampas.map((type) => (
@@ -65,7 +66,7 @@ const ProductsSection: React.FC = () => {
             className={`px-4 py-2 rounded-3xl  ${
               filter === type
                 ? "bg-white text-black font-semibold"
-                : "bg-transparent  border-white border-[0.2px] hover:bg-gray-600 text-gray-200"
+                : "bg-transparent  border-slate-500 border-[0.2px] hover:bg-gray-600 text-gray-200"
             }`}
             onClick={() => handleFilterChange(type)}
           >
@@ -74,10 +75,8 @@ const ProductsSection: React.FC = () => {
         ))}
       </div>
 
-      <h1 className="text-xl p-2 font-bold mb-2 ">Produtos</h1>
-
-      <div className="flex flex-col flex-1 justify-between">
-        <div className="w-3/2 gap-2 flex justify-between mx-auto px-4">
+      <div className="flex flex-col flex-1 justify-between my-4 ">
+        <div className="w-3/2 fel gap-2 flex justify-between mx-auto px-4">
           <div className="grid grid-cols-2 flex-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
             {currentProducts.map((product) => (
               <div
@@ -98,18 +97,17 @@ const ProductsSection: React.FC = () => {
                 </div>
                 <div className="">
                   <div className="flex items-center justify-between mt-1">
-                  <h2 className="text-sm font-semibold">{product.name}</h2>
-                  <p className="text-sm font-bold">
-                    {new Intl.NumberFormat("pt-BR", {
-                      style: "currency",
-                      currency: "BRL",
-                    }).format(product.price)}
-                  </p>
+                    <h2 className="text-sm font-semibold">{product.name}</h2>
+                    <p className="text-sm font-bold">
+                      {new Intl.NumberFormat("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      }).format(product.price)}
+                    </p>
                   </div>
                   <p className="text-gray-400 text-sm">
                     {product.pattern || "sem classificação"}
                   </p>
-                  
                 </div>
               </div>
             ))}
