@@ -22,7 +22,7 @@ function Carrossel() {
           prevEl: `.${styles.custom_prev}`,
         }}
         pagination={{ clickable: true }}
-        autoplay={{ delay: 3000 }}
+        autoplay={{ delay: 6000 }}
         loop={true}
         spaceBetween={12}
         slidesPerView={1}

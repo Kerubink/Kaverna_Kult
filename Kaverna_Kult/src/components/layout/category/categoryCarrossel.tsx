@@ -18,10 +18,7 @@ const categories: Category[] = [
 const CategoryCarousel: React.FC = () => {
   return (
     <>
-      <section className="p-2">
-        <h1 className="text-lg font-bold text-left text-white">
-          Categorias
-        </h1>
+      <section className="mt-2">
         <div className="overflow-x-scroll flex gap-4  scrollbar-hide text-white">
           {categories.map((category) => (
             <div

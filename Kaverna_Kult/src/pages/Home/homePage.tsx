@@ -1,4 +1,3 @@
-
 import BannerInsta from "@/components/layout/bannerInsta/bannerInsta";
 import BannerPromotion from "@/components/layout/bannerPromotion/bannerPromotion";
 import CollectionsSection from "@/components/layout/CollectionsSection/collectionsSection";
@@ -8,15 +7,19 @@ import ProductModal from "@/components/product/productModal/ProductModal";
 import styles from "./homePage.module.css";
 import Carrossel from "@/components/carrossel/carrossel";
 import CategoryCarousel from "@/components/layout/category/categoryCarrossel";
+import CarrosselPromo from "@/components/carrossel/carrosselPromo/carrosselPromo";
+import ProdutosPopulares from "@/components/product/productPopu/productPopu";
 
 function Home() {
-
-
   return (
     <>
-      <Carrossel/>
+      <div>
+        <Carrossel />
+        <CarrosselPromo />
+      </div>
 
-      <CategoryCarousel/>
+      <CategoryCarousel />
+      <ProdutosPopulares />
 
       <ProductModalProvider>
         <ProductsSection />

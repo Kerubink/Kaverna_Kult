@@ -57,7 +57,10 @@ const ProductsSection: React.FC = () => {
 
   return (
     <section className="w-full flex flex-col min-h-screen bg-black text-white">
-      <h1 className="text-xl p-2 font-bold mb-2">Produtos</h1>
+      <div className="m-2">
+        <h1 className="text-lg font-extralight text-l">Produtos</h1>
+        <hr className="w-[50px] h-[3.5px] mt-1 bg-primary-dark"/>
+      </div>
       {/* Filtro por Tipo de Estampa */}
       <div className="flex overflow-auto gap-2 p-2">
         {estampas.map((type) => (
