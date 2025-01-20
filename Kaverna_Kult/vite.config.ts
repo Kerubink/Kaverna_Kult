@@ -8,9 +8,19 @@ export default defineConfig({
     include: ["swiper"],
   },
   plugins: [react()],
+  server: {
+    proxy: {
+      '/api/frete': {
+        target: 'https://freteapi.herokuapp.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/frete/, '/frete'),
+      },
+    },
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
+
   },
 })

@@ -6,6 +6,7 @@ export interface CartItem {
   colors: string[];
   sizes: string[];
   image: string;
+  collection: string;
   selectedColor: string;
   selectedSize: string;
   gallery: string[];
@@ -14,6 +15,5 @@ export interface CartItem {
   quantity: number;
   shippingDetails: string;
   isSelected: boolean; 
-
   }
   

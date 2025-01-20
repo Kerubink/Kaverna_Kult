@@ -65,16 +65,33 @@ const ProductModal: React.FC = () => {
       className={`fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 overflow-auto ${styles.modalConteiner}`}
     >
       <div className={` ${styles.modalContent}`}>
-        <button
-          onClick={closeModal}
-          className="absolute top-5 left-5 text-2xl text-gray-400 hover:text-white z-50"
-        >
-          <i className="fi fi-rr-arrow-left"></i>
-        </button>
+        <div className="absolute top-5 z-50 flex items-center justify-between w-full p-4 text-black ">
+          <button
+            onClick={closeModal}
+            className=" text-2xl text-gray-400 hover:text-black "
+          >
+            <i className="fi fi-rr-arrow-left"></i>
+          </button>
+
+          <div className="ml-auto mr-auto">
+            <div className="flex justify-between items-center">
+              <div className="flex flex-col justify-between">
+                {/* <span className="text-[10px] text-gray-400">
+                  {product.collection}
+                </span> */}
+                <h2 className="text-xl font-extralight">{product.name}</h2>
+              </div>
+            </div>
+          </div>
+
+         
+        </div>
 
         {/* Section de Imagens */}
-        <div className={` ${styles.contentImg}`}>
-          <div className="flex-1 rounded-xl bg-cover bg-center flex justify-center items-end relative group overflow-hidden bg-white">
+        <div className={` ${styles.contentImg} relative`}>
+          <div
+            className={`${styles.inverted_radius} flex-1 rounded-xl bg-cover bg-center flex justify-center items-end relative group overflow-hidden bg-white`}
+          >
             {/* Imagem Principal */}
             <img
               src={mainImage}
@@ -82,7 +99,7 @@ const ProductModal: React.FC = () => {
               className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
             />
             {/* Galeria */}
-            <div className="flex gap-2 overflow-x-auto p-1 bg-white rounded-lg mb-7 shadow-xl absolute bottom-2">
+            <div className="flex flex-col gap-2 overflow-x-auto p-1 bg-white rounded-lg mb-2 shadow-xl absolute bottom-2 right-2">
               {product.gallery?.map((img, index) => (
                 <img
                   key={index}
@@ -94,30 +111,28 @@ const ProductModal: React.FC = () => {
               ))}
             </div>
           </div>
+          <div className="absolute bottom-6 text-white">
+            <p className="text-md text-white font-extralight">
+              {new Intl.NumberFormat("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              }).format(product.price)}
+            </p>{" "}
+          </div>
         </div>
 
         {/* Section de Informações dos Produtos */}
-        <div className={`gap-4 ${styles.contentInf}`}>
+        <div className={`gap-4 overflow-auto ${styles.contentInf}`}>
           <div>
-            <div className="flex justify-between items-end text-white">
-              <div>
-                <span className="text-[10px] text-gray-400">
-                  {product.collection}
-                </span>
-                <h2 className="text-xl font-bold">{product.name}</h2>
-              </div>
-              <p className="text-xl font-semibold">
-                {new Intl.NumberFormat("pt-BR", {
-                  style: "currency",
-                  currency: "BRL",
-                }).format(product.price)}
-              </p>
-            </div>
+            <label className="block text-gray-300 mb-2 text-sm">
+              Descrição
+            </label>
+            <p className="text-md text-gray-400">{product.description}</p>
           </div>
 
           {/* Seleção de Cor, Tamanho e Quantidade */}
           <div className="flex flex-col justify-between gap-4">
-            <div className="flex items-center justify-between">
+            <div className="flex  flex-col justify-between">
               <label className="block text-gray-300 mb-2">Cor</label>
               <div className="flex gap-2">
                 {product.colors?.map((color, index) => (
@@ -135,7 +150,7 @@ const ProductModal: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col  justify-between">
               <label className="block text-gray-300 mb-2">Tamanho</label>
               <div className="flex gap-2">
                 {product.sizes?.map((size, index) => (
@@ -159,42 +174,38 @@ const ProductModal: React.FC = () => {
                 ))}
               </div>
             </div>
-
-            <div className="flex items-center justify-between">
-              <label className="block text-gray-300 mb-2">Quantidade</label>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => handleQuantityChange(false)}
-                  className="bg-gray-700 text-white p-2 rounded-full w-8 h-8 flex items-center justify-center"
-                >
-                  -
-                </button>
-                <input
-                  type="number"
-                  value={quantity}
-                  readOnly
-                  className="w-12 bg-transparent text-white text-center p-2 rounded-md appearance-none"
-                />
-                <button
-                  onClick={() => handleQuantityChange(true)}
-                  className="bg-gray-700 text-white p-2 rounded-full w-8 h-8 flex items-center justify-center"
-                >
-                  +
-                </button>
-              </div>
-            </div>
           </div>
-
-          <p className="text-sm text-gray-400">{product.description}</p>
-
         </div>
 
-        <button
-          className="bg-white text-black font-bold rounded-lg p-4 py-2 fixed bottom-4 left-1/2 -translate-x-1/2 w-3/4"
-          onClick={handleAddToCart}
-        >
-          Adicionar ao Carrinho
-        </button>
+        <div className="flex items-center justify-around p-4">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => handleQuantityChange(false)}
+              className="bg-gray-700 text-white p-2 rounded-full w-8 h-8 flex items-center justify-center"
+            >
+              -
+            </button>
+            <input
+              type="number"
+              value={quantity}
+              readOnly
+              className="w-12 bg-transparent text-white text-center p-2 rounded-md appearance-none"
+            />
+            <button
+              onClick={() => handleQuantityChange(true)}
+              className="bg-gray-700 text-white p-2 rounded-full w-8 h-8 flex items-center justify-center"
+            >
+              +
+            </button>
+          </div>
+
+          <button
+            className="bg-white text-black font-bold rounded-lg p-2"
+            onClick={handleAddToCart}
+          >
+            Adicionar ao Carrinho
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -8,6 +8,7 @@ type Product = {
   colors: string[];
   sizes: string[];
   image: string;
+  collection: string;
   selectedColor: string;
   selectedSize: string;
   gallery: string[];
@@ -22,7 +23,7 @@ type CartContextProps = {
   cart: Product[];
   addToCart: (product: Product) => void;
   removeFromCart: (id: number, selectedColor: string, selectedSize: string) => void;
-  updateQuantity: (id: number, quantity: number) => void;
+  updateQuantity: (id: number, selectedColor: string, selectedSize: string, quantity: number) => void;
   clearCart: () => void;
   toggleSelection: (id: number, selectedColor: string, selectedSize: string) => void; 
 };
@@ -32,6 +33,7 @@ const CartContext = createContext<CartContextProps | undefined>(undefined);
 interface CartProviderProps {
   children: React.ReactNode;
 }
+
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [cart, setCart] = useState<Product[]>(() => {
     const storedCart = localStorage.getItem("cart");
@@ -80,11 +82,15 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     );
   };
 
-  const updateQuantity = (id: number, quantity: number) => {
+  const updateQuantity = (id: number, selectedColor: string, selectedSize: string, quantity: number) => {
     if (quantity < 1) return;
     setCart(
       cart.map((item) =>
-        item.id === id ? { ...item, quantity: quantity } : item
+        item.id === id &&
+        item.selectedColor === selectedColor &&
+        item.selectedSize === selectedSize
+          ? { ...item, quantity: quantity }
+          : item
       )
     );
   };

@@ -2,7 +2,7 @@ import { useCart } from "@/contexts/cartContext/cartContext";
 import { CartItem } from "@/types/cartTypes";
 
 const useCartHook = () => {
-  const { cart, addToCart, removeFromCart, clearCart, toggleSelection } = useCart(); // Obtenha a função toggleSelection do contexto
+  const { cart, addToCart, removeFromCart, clearCart, toggleSelection, updateQuantity } = useCart();
 
   const addProductToCart = (product: CartItem) => {
     addToCart(product);
@@ -17,7 +17,11 @@ const useCartHook = () => {
   };
 
   const toggleSelectionProduction = (id: number, selectedColor: string, selectedSize: string) => {
-    toggleSelection(id, selectedColor, selectedSize); // Use a função de toggle do contexto
+    toggleSelection(id, selectedColor, selectedSize); 
+  };
+
+  const updateProductQuantity = (id: number, selectedColor: string, selectedSize: string, quantity: number) => {
+    updateQuantity(id, selectedColor, selectedSize, quantity);
   };
 
   return {
@@ -25,7 +29,8 @@ const useCartHook = () => {
     addProductToCart,
     removeProductFromCart,
     clearAllItems,
-    toggleSelectionProduction, // Retorne a função para ser usada no componente
+    toggleSelectionProduction,
+    updateProductQuantity, // Retorne a função de atualização de quantidade
   };
 };
 
