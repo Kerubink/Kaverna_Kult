@@ -65,7 +65,7 @@ const ProductModal: React.FC = () => {
       className={`fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 overflow-auto ${styles.modalConteiner}`}
     >
       <div className={` ${styles.modalContent}`}>
-        <div className="absolute top-5 z-50 flex items-center justify-between w-full p-4 text-black ">
+        <div className="absolute top-5 z-50 flex items-center justify-between w-full px-4 text-black ">
           <button
             onClick={closeModal}
             className=" text-2xl text-gray-400 hover:text-black "
@@ -79,7 +79,7 @@ const ProductModal: React.FC = () => {
                 {/* <span className="text-[10px] text-gray-400">
                   {product.collection}
                 </span> */}
-                <h2 className="text-xl font-extralight">{product.name}</h2>
+                <h2 className="text-xl font-light">{product.name}</h2>
               </div>
             </div>
           </div>
@@ -105,33 +105,28 @@ const ProductModal: React.FC = () => {
                   key={index}
                   src={img}
                   alt={`${product.name}-img-${index}`}
-                  className="w-14 h-14 object-cover rounded-md border-2 bg-white cursor-pointer hover:opacity-80"
+                  className="w-12 h-12 object-cover rounded-md border-2 bg-white cursor-pointer hover:opacity-80"
                   onClick={() => setMainImage(img)}
                 />
               ))}
             </div>
           </div>
           <div className="absolute bottom-6 text-white">
-            <p className="text-md text-white font-extralight">
+            <p className="text-md text-white font-extrabold">
               {new Intl.NumberFormat("pt-BR", {
                 style: "currency",
                 currency: "BRL",
               }).format(product.price)}
-            </p>{" "}
+            </p>
           </div>
         </div>
 
         {/* Section de Informações dos Produtos */}
         <div className={`gap-4 overflow-auto ${styles.contentInf}`}>
-          <div>
-            <label className="block text-gray-300 mb-2 text-sm">
-              Descrição
-            </label>
-            <p className="text-md text-gray-400">{product.description}</p>
-          </div>
+          
 
           {/* Seleção de Cor, Tamanho e Quantidade */}
-          <div className="flex flex-col justify-between gap-4">
+          <div className="flex justify-between gap-4">
             <div className="flex  flex-col justify-between">
               <label className="block text-gray-300 mb-2">Cor</label>
               <div className="flex gap-2">
@@ -139,9 +134,9 @@ const ProductModal: React.FC = () => {
                   <button
                     key={index}
                     style={{ backgroundColor: color }}
-                    className={`w-8 h-8 rounded-full border-[1px] ${
+                    className={`w-8 h-8 rounded-md border-2 ${
                       selectedColor === color
-                        ? "border-blue-500"
+                        ? "border-blue-600"
                         : "border-[#ccc]"
                     }`}
                     onClick={() => setSelectedColor(color)}
@@ -156,10 +151,10 @@ const ProductModal: React.FC = () => {
                 {product.sizes?.map((size, index) => (
                   <label
                     key={index}
-                    className={`w-8 h-8 flex items-center justify-center rounded-full border-2 ${
+                    className={`w-8 h-8 flex items-center justify-center rounded-md border-2 ${
                       selectedSize === size
-                        ? "bg-slate-700 text-white border-slate-700"
-                        : "bg-white text-black border-gray-300"
+                        ? "text-white border-blue-600"
+                        : "text-white border-gray-300"
                     } cursor-pointer`}
                   >
                     <input
@@ -173,15 +168,22 @@ const ProductModal: React.FC = () => {
                   </label>
                 ))}
               </div>
+              
             </div>
+            
+          </div>
+          <div>
+            <label className="block text-gray-300 mb-2">Descrição</label>
+            <p className="text-sm text-gray-400 text-justify">{product.description}
+            </p>
           </div>
         </div>
 
-        <div className="flex items-center justify-around p-4">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between p-4">
+          <div className="flex items-center gap-1">
             <button
               onClick={() => handleQuantityChange(false)}
-              className="bg-gray-700 text-white p-2 rounded-full w-8 h-8 flex items-center justify-center"
+              className="text-white border-[1px] border-white rounded-md w-8 h-8 flex items-center justify-center"
             >
               -
             </button>
@@ -193,7 +195,7 @@ const ProductModal: React.FC = () => {
             />
             <button
               onClick={() => handleQuantityChange(true)}
-              className="bg-gray-700 text-white p-2 rounded-full w-8 h-8 flex items-center justify-center"
+              className="text-white border-[1px] border-white rounded-md w-8 h-8 flex items-center justify-center"
             >
               +
             </button>
