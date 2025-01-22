@@ -20,6 +20,7 @@
     "firebase": "^11.1.0",
     "lucide-react": "^0.464.0",
     "react": "^18.3.1",
+    "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.0.2",
     "swiper": "^11.1.15",

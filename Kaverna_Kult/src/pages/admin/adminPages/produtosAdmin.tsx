@@ -1,32 +1,18 @@
-// src/pages/Admin/Produtos.tsx
 import React, { useState, useEffect } from "react";
-import { db } from "@/database/firebase_config"; // Configuração do Firebase
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { db } from "@/database/firebase_config";
+import { collection, getDocs, updateDoc, deleteDoc, doc } from "firebase/firestore";
+import ProductForm from "../adminComponents/productForm";
+import ProductList from "../adminComponents/productTable";
 
 const ProdutosPage = () => {
   const [products, setProducts] = useState([]);
-  const [productName, setProductName] = useState("");
-  const [productPrice, setProductPrice] = useState("");
-
-  const handleAddProduct = async () => {
-    try {
-      await addDoc(collection(db, "products"), {
-        name: productName,
-        price: parseFloat(productPrice),
-      });
-      alert("Produto adicionado com sucesso!");
-      setProductName("");
-      setProductPrice("");
-      loadProducts();
-    } catch (error) {
-      console.error("Erro ao adicionar produto:", error);
-      alert("Erro ao adicionar produto");
-    }
-  };
 
   const loadProducts = async () => {
     const querySnapshot = await getDocs(collection(db, "products"));
-    const productsList = querySnapshot.docs.map(doc => doc.data());
+    const productsList = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
     setProducts(productsList);
   };
 
@@ -35,28 +21,11 @@ const ProdutosPage = () => {
   }, []);
 
   return (
-    <div>
-      <h1>Produtos</h1>
-      <input
-        type="text"
-        placeholder="Nome do Produto"
-        value={productName}
-        onChange={(e) => setProductName(e.target.value)}
-      />
-      <input
-        type="number"
-        placeholder="Preço"
-        value={productPrice}
-        onChange={(e) => setProductPrice(e.target.value)}
-      />
-      <button onClick={handleAddProduct}>Adicionar Produto</button>
+    <div className="p-8 bg-gray-100 min-h-screen">
+      <h1 className="text-2xl font-bold mb-4">Gerenciar Produtos</h1>
 
-      <h2>Produtos Cadastrados</h2>
-      <ul>
-        {products.map((product, index) => (
-          <li key={index}>{product.name} - R${product.price}</li>
-        ))}
-      </ul>
+      <ProductForm onProductAdded={loadProducts} />
+      <ProductList products={products} onProductUpdated={loadProducts} />
     </div>
   );
 };

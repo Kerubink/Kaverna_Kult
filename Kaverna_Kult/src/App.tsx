@@ -7,13 +7,13 @@ import Home from "@/pages/Home/homePage";
 import ProductsPage from "@/pages/ProductsPage/productPage";
 import Contato from "@/pages/Contato/contatoPage";
 import NotFound from "@/pages/NotFound/notFoundPage";
-import ProductForm from "@/pages/admin/adminPages/produtosAdmin";
 import PedidosPage from "@/pages/admin/adminPages/pedidosAdmin";
 import ConfiguracoesPage from "@/pages/admin/adminPages/geralAdmin";
 import DashboardPage from "@/pages/admin/dashboardAdmin";
 import CheckoutPage from "@/pages/checkout/checkoutPage";
 import LoginPage from "@/pages/login/login";
 import { getAuth } from "firebase/auth";
+import ProdutosPage from "@/pages/admin/adminPages/produtosAdmin";
 
 // Verifica se o usuário está autenticado com o Firebase
 const isAuthenticated = () => {
@@ -49,7 +49,7 @@ function App() {
               path="/admin"
               element={<ProtectedRoute element={<DashboardPage />} />}
             >
-              <Route path="produtos" element={<ProductForm />} />
+              <Route path="produtos" element={<ProdutosPage />} />
               <Route path="pedidos" element={<PedidosPage />} />
               <Route path="configuracoes" element={<ConfiguracoesPage />} />
             </Route>

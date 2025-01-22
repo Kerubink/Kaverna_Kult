@@ -79,7 +79,7 @@ const ProductModal: React.FC = () => {
                 {/* <span className="text-[10px] text-gray-400">
                   {product.collection}
                 </span> */}
-                <h2 className="text-xl font-light">{product.name}</h2>
+                <h2 className="text-xl font-bold">{product.name}</h2>
               </div>
             </div>
           </div>

@@ -19,9 +19,9 @@ function Home() {
       </div>
 
       <CategoryCarousel />
-      <ProdutosPopulares />
 
       <ProductModalProvider>
+        <ProdutosPopulares />
         <ProductsSection />
         <ProductModal />
       </ProductModalProvider>
