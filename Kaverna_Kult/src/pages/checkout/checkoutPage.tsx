@@ -268,7 +268,7 @@ const CheckoutPage: React.FC = () => {
             <p>{resultadoFrete.mensagemAviso}</p>
           </div>
         )}
-
+        //teste de commit
         <div className="flex fixed w-full bottom-0 left-0 p-2 gap-4">
           <div>
             <div className="flex items-center text-md font-semibold">
