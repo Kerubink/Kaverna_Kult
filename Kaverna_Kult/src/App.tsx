@@ -1,5 +1,4 @@
-// src/App.tsx
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { CartProvider } from "@/contexts/cartContext/cartContext";
 import Navbar from "./components/layout/Navbar/navbar";
 import Footer from "./components/layout/Footer/footer";
@@ -27,16 +26,21 @@ const ProtectedRoute = ({ element }: { element: JSX.Element }) => {
 };
 
 function App() {
-  const isAdminRoute = window.location.pathname.startsWith("/admin");
+  const location = useLocation();
+
+  // Determina se a rota é uma rota de admin ou checkout
+  const isAdminRoute = location.pathname.startsWith("/admin");
+  const isCheckoutRoute = location.pathname.startsWith("/checkout");
 
   return (
     <CartProvider>
       <div
         className={`flex flex-col min-h-screen relative bg-black ${
-          isAdminRoute ? "" : "with-navbar-footer"
+          isAdminRoute || isCheckoutRoute ? "" : "with-navbar-footer"
         }`}
       >
-        {!isAdminRoute && <Navbar />}
+        {/* Renderiza a Navbar apenas se não for uma rota de admin nem a rota de checkout */}
+        {!isAdminRoute && !isCheckoutRoute && <Navbar />}
 
         <main className="flex-1">
           <Routes>
@@ -59,6 +63,7 @@ function App() {
           </Routes>
         </main>
 
+        {/* Renderiza o Footer apenas se não for uma rota de admin */}
         {!isAdminRoute && <Footer />}
       </div>
     </CartProvider>
