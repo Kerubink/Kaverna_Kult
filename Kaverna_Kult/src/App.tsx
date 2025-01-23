@@ -64,7 +64,7 @@ function App() {
         </main>
 
         {/* Renderiza o Footer apenas se não for uma rota de admin */}
-        {!isAdminRoute && <Footer />}
+        {!isAdminRoute && !isCheckoutRoute && <Footer />}
       </div>
     </CartProvider>
   );

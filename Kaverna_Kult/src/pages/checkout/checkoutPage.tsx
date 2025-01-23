@@ -189,27 +189,28 @@ const CheckoutPage: React.FC = () => {
 
   return (
     <div className="bg-white shadow-lg rounded-lg p-3 w-full max-w-3xl min-h-screen">
-      <div>
-        <Link to="/">
-        <button>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            className="size-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18"
-            />
-          </svg>
-        </button>
+      <div className="flex justify-center items-center relative">
+        <Link to="/" className="absolute left-2">
+          <button className="flex justify-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              className="size-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18"
+              />
+            </svg>
+          </button>
         </Link>
+        <h1 className="text-2xl font-bold text-gray-800">Checkout</h1>
       </div>
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">Checkout</h1>
+
       <ul className="divide-y divide-gray-200">
         {selectedItems.map((item: any) => (
           <li key={item.id} className="flex items-center py-4">
@@ -237,10 +238,6 @@ const CheckoutPage: React.FC = () => {
         ))}
       </ul>
       <div className="mt-6 border-t pt-4">
-        <div className="flex justify-between items-center text-lg font-semibold">
-          <span>Total:</span>
-          <span className="text-green-600">R${totalPrice.toFixed(2)}</span>
-        </div>
         <div className="mt-4">
           <label htmlFor="cep" className="block text-gray-700 font-semibold">
             CEP de destino:
@@ -272,12 +269,41 @@ const CheckoutPage: React.FC = () => {
           </div>
         )}
 
-        <button
-          onClick={handleConfirmarPedido}
-          className="mt-6 w-full bg-green-500 hover:bg-green-600 text-white py-3 px-6 rounded-lg text-lg font-medium shadow-md transition duration-200"
-        >
-          Confirmar Pedido
-        </button>
+        <div className="flex fixed w-full bottom-0 left-0 p-2 gap-4">
+          <div>
+            <div className="flex items-center text-md font-semibold">
+              <span>Produtos:</span>
+              <span className="text-green-600">R${totalPrice.toFixed(2)}</span>
+            </div>
+            <div className="flex items-center text-md font-semibold">
+              <span>Frete:</span>
+              <span className="text-green-600">
+                {resultadoFrete &&
+                typeof resultadoFrete.valorSimulado === "number"
+                  ? `R$${resultadoFrete.valorSimulado.toFixed(2)}`
+                  : "Aguardando..."}
+              </span>
+            </div>
+            <div className="flex items-center text-md font-semibold">
+              <span>Total:</span>
+              <span className="text-green-600">
+                {resultadoFrete &&
+                typeof resultadoFrete.valorSimulado === "number"
+                  ? `R$${(totalPrice + resultadoFrete.valorSimulado).toFixed(
+                      2
+                    )}`
+                  : "Aguardando..."}
+              </span>
+            </div>
+          </div>
+
+          <button
+            onClick={handleConfirmarPedido}
+            className="w-full bg-green-500 hover:bg-green-600 text-white py-3 px-6 rounded-lg text-lg font-medium shadow-md transition duration-200"
+          >
+            Confirmar Pedido
+          </button>
+        </div>
       </div>
 
       {isModalOpen && (
