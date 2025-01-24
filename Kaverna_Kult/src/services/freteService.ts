@@ -46,7 +46,7 @@ interface FreteParams {
     const mensagemAviso = `Este é um valor simulado. Verifique o valor real no site dos Correios ou com o representante da loja pelo Whatsapp.`;
   
     return {
-      valorSimulado: `R$ ${valorSimulado}`,
+      valorSimulado: `${valorSimulado}`,
       prazoEntrega,
       mensagemAviso,
     };

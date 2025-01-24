@@ -1,8 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { calcularFreteSimulado } from "../../services/freteService";
-import { enviarPedido } from "../../services/serviceCheckout/pedidoService";
-import { buscarEnderecoPorCep } from "@/services/serviceCheckout/buscaCep";
+import InputMask from "react-input-mask";
+
+// Função para buscar o endereço usando a API de CEP
+const buscarEnderecoPorCEP = async (cep: string) => {
+  const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+  const data = await response.json();
+  return data;
+};
 
 const CheckoutPage: React.FC = () => {
   const location = useLocation();
@@ -15,160 +20,21 @@ const CheckoutPage: React.FC = () => {
     0
   );
 
-  const [cepDestino, setCepDestino] = useState("");
-  const [pesoTotal, setPesoTotal] = useState(0);
-  const [quantidadeTotal, setQuantidadeTotal] = useState(0);
-  const [resultadoFrete, setResultadoFrete] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     nome: "",
     telefone: "",
     idade: "",
-    observacao: "",
-    cep: "",
     cidade: "",
     estado: "",
     logradouro: "",
     numeroCasa: "",
     complemento: "",
+    cep: "",
   });
 
-  const calcularPesoEQuantidade = () => {
-    let peso = 0;
-    let quantidade = 0;
-
-    selectedItems.forEach((item: { peso: number; quantity: number }) => {
-      peso += item.peso * item.quantity;
-      quantidade += item.quantity;
-    });
-
-    setPesoTotal(peso);
-    setQuantidadeTotal(quantidade);
-  };
-
-  const handleCalcularFrete = () => {
-    if (cepDestino) {
-      const frete = calcularFreteSimulado({
-        cepDestino,
-        peso: pesoTotal,
-        quantidade: quantidadeTotal,
-      });
-      setResultadoFrete(frete);
-    } else {
-      alert("Por favor, insira um CEP válido.");
-    }
-  };
-
-  const handleBuscarEndereco = async () => {
-    if (!cepDestino) {
-      alert("Por favor, insira um CEP válido.");
-      return;
-    }
-    const endereco = await buscarEnderecoPorCep(cepDestino);
-    if (endereco) {
-      setFormData((prev) => ({
-        ...prev,
-        cep: cepDestino,
-        cidade: endereco.localidade,
-        estado: endereco.uf,
-        complemento: endereco.complemento || "",
-        logradouro: endereco.logradouro || "", // Adiciona o logradouro
-      }));
-    } else {
-      alert("Não foi possível encontrar o endereço para o CEP informado.");
-    }
-  };
-
   const handleConfirmarPedido = () => {
-    setFormData((prev) => ({ ...prev, cep: cepDestino })); // Preenche o CEP automaticamente no formulário
     setIsModalOpen(true);
-  };
-
-  const handleEnviarPedido = async () => {
-    try {
-      // Validação de campos obrigatórios
-      if (
-        !formData.nome ||
-        !formData.telefone ||
-        !formData.cidade ||
-        !formData.estado ||
-        !formData.logradouro ||
-        !formData.numeroCasa
-      ) {
-        alert("Por favor, preencha todos os campos obrigatórios.");
-        return;
-      }
-
-      // Construção do pedido
-      const pedido = {
-        itens: selectedItems.map((item: any) => ({
-          nome: item.name,
-          tamanho: item.selectedSize,
-          cor: item.selectedColor,
-          quantidade: item.quantity,
-          colecao: item.colecao || "Não especificado",
-        })),
-        total: totalPrice,
-        cliente: {
-          nome: formData.nome,
-          telefone: formData.telefone,
-          idade: formData.idade,
-          observacao: formData.observacao,
-          endereco: {
-            cep: formData.cep,
-            cidade: formData.cidade,
-            estado: formData.estado,
-            numeroCasa: formData.numeroCasa,
-            logradouro: formData.logradouro,
-            complemento: formData.complemento,
-          },
-        },
-      };
-
-      // Envio do pedido para o backend
-      const response = await enviarPedido(pedido);
-      console.log("Resposta do envio de pedido:", response); // Verifique a resposta no console
-
-      if (response?.success) {
-        alert("Pedido enviado com sucesso!");
-        setIsModalOpen(false);
-
-        // Gerar mensagem para WhatsApp
-        const whatsappNumber = "+5582999276798"; // Substitua pelo número correto
-        const mensagem = encodeURIComponent(`
-          Novo Pedido Recebido!
-          Cliente: ${formData.nome}
-          Telefone: ${formData.telefone}
-          Endereço: ${formData.logradouro}, ${formData.numeroCasa}, ${
-          formData.cidade
-        }/${formData.estado}, CEP: ${formData.cep}
-          Observação: ${formData.observacao || "Nenhuma"}
-          Total do Pedido: R$ ${totalPrice.toFixed(2)}
-  
-          Itens:
-          ${selectedItems
-            .map(
-              (item: any) =>
-                `- ${item.name} (Tamanho: ${item.selectedSize}, Cor: ${item.selectedColor}, Quantidade: ${item.quantity})`
-            )
-            .join("\n")}
-        `);
-
-        // Verifique se o WhatsApp URL está correto
-        const whatsappUrl = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${mensagem}`;
-        console.log("Redirecionando para o WhatsApp:", whatsappUrl); // Verifique a URL
-
-        // Tentar abrir o WhatsApp em uma nova aba ou na mesma aba
-        window.open(whatsappUrl, "_blank");
-        // Ou, se preferir redirecionar na mesma aba:
-        // window.location.href = whatsappUrl;
-      } else {
-        alert("Ocorreu um erro ao enviar o pedido. Tente novamente.");
-      }
-    } catch (error) {
-      console.error("Erro ao enviar o pedido:", error);
-      alert("Ocorreu um erro inesperado. Por favor, tente novamente.");
-    }
   };
 
   const handleInputChange = (
@@ -178,17 +44,31 @@ const CheckoutPage: React.FC = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  useEffect(() => {
-    calcularPesoEQuantidade();
-  }, [selectedItems]);
+  // Função chamada quando o CEP é preenchido
+  const handleCEPChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setFormData((prev) => ({ ...prev, cep: value }));
 
-  const handleCalcularFreteEBuscarEndereco = () => {
-    handleCalcularFrete();
-    handleBuscarEndereco();
+    // Quando o CEP tiver 8 caracteres, buscamos o endereço
+    if (value.length === 8) {
+      const endereco = await buscarEnderecoPorCEP(value);
+
+      // Verifica se o retorno da API contém o endereço
+      if (endereco && !endereco.erro) {
+        setFormData((prev) => ({
+          ...prev,
+          logradouro: endereco.logradouro || "",
+          cidade: endereco.localidade || "",
+          estado: endereco.uf || "",
+        }));
+      } else {
+        alert("CEP não encontrado.");
+      }
+    }
   };
 
   return (
-    <div className="bg-white shadow-lg rounded-lg p-3 w-full max-w-3xl min-h-screen">
+    <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-3xl min-h-screen">
       <div className="flex justify-center items-center relative">
         <Link to="/" className="absolute left-2">
           <button className="flex justify-center">
@@ -196,13 +76,13 @@ const CheckoutPage: React.FC = () => {
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
-              stroke-width="1.5"
+              strokeWidth="1.5"
               stroke="currentColor"
               className="size-6"
             >
               <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18"
               />
             </svg>
@@ -237,64 +117,18 @@ const CheckoutPage: React.FC = () => {
           </li>
         ))}
       </ul>
+
       <div className="mt-6 border-t pt-4">
-        <div className="mt-4">
-          <label htmlFor="cep" className="block text-gray-700 font-semibold">
-            CEP de destino:
-          </label>
-          <input
-            type="text"
-            id="cep"
-            value={cepDestino}
-            onChange={(e) => setCepDestino(e.target.value)}
-            placeholder="Digite o CEP"
-            className="w-full mt-2 p-2 border rounded-md"
-          />
-          <button
-            onClick={handleCalcularFreteEBuscarEndereco}
-            className="mt-4 w-full bg-blue-500 hover:bg-blue-600 text-white py-3 px-6 rounded-lg text-lg font-medium shadow-md transition duration-200"
-          >
-            Buscar Endereço
-          </button>
-        </div>
-
-        {resultadoFrete && (
-          <div className="mt-6 text-sm flex flex-col gap-2">
-            <p className="text-sm font-semibold ">
-              Frete aproximado: {resultadoFrete.valorSimulado}
-            </p>
-            <p>{resultadoFrete.prazoEntrega}</p>
-
-            <p>{resultadoFrete.mensagemAviso}</p>
-          </div>
-        )}
-        //teste de commit
-        <div className="flex fixed w-full bottom-0 left-0 p-2 gap-4">
-          <div>
-            <div className="flex items-center text-md font-semibold">
-              <span>Produtos:</span>
+        <div className="fixed w-full bottom-0 left-0 p-2 flex flex-col gap-4">
+          <div className="flex flex-col gap-2">
+            <div className="flex text-lg gap-2 font-semibold">
+              <span>Subtotal:</span>
               <span className="text-green-600">R${totalPrice.toFixed(2)}</span>
             </div>
-            <div className="flex items-center text-md font-semibold">
-              <span>Frete:</span>
-              <span className="text-green-600">
-                {resultadoFrete &&
-                typeof resultadoFrete.valorSimulado === "number"
-                  ? `R$${resultadoFrete.valorSimulado.toFixed(2)}`
-                  : "Aguardando..."}
-              </span>
-            </div>
-            <div className="flex items-center text-md font-semibold">
-              <span>Total:</span>
-              <span className="text-green-600">
-                {resultadoFrete &&
-                typeof resultadoFrete.valorSimulado === "number"
-                  ? `R$${(totalPrice + resultadoFrete.valorSimulado).toFixed(
-                      2
-                    )}`
-                  : "Aguardando..."}
-              </span>
-            </div>
+            <p className="text-sm font-semibold text-slate-500">
+              O frete será calculado por um vendedor através do WhatsApp após
+              você confirmar o pedido.
+            </p>
           </div>
 
           <button
@@ -308,40 +142,174 @@ const CheckoutPage: React.FC = () => {
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white h-full overflow-auto p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
-              Dados do Cliente
-            </h2>
+          <div className="bg-white w-full max-w-lg p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl font-bold text-gray-800 mb-6">Dados do Cliente</h2>
+
             <form>
-              {/* Formulário de Dados do Cliente */}
-              {[
-                "nome",
-                "telefone",
-                "idade",
-                "cidade",
-                "estado",
-                "numeroCasa",
-                "logradouro",
-                "complemento",
-              ].map((field) => (
-                <div key={field} className="mb-4">
+              {/* Campo de Nome */}
+              <div className="mb-4">
+                <label
+                  className="block text-gray-700 font-semibold"
+                  htmlFor="nome"
+                >
+                  Nome
+                </label>
+                <input
+                  id="nome"
+                  name="nome"
+                  value={formData.nome}
+                  onChange={handleInputChange}
+                  placeholder="Digite seu nome"
+                  className="w-full p-3 border rounded-md shadow-sm"
+                />
+              </div>
+
+              {/* Campo de Telefone com Máscara */}
+              <div className="mb-4">
+                <label
+                  className="block text-gray-700 font-semibold"
+                  htmlFor="telefone"
+                >
+                  Telefone
+                </label>
+                <InputMask
+                  mask="(99) 99999-9999"
+                  id="telefone"
+                  name="telefone"
+                  value={formData.telefone}
+                  onChange={handleInputChange}
+                  placeholder="Digite seu telefone"
+                  className="w-full p-3 border rounded-md shadow-sm"
+                />
+              </div>
+
+              {/* Campo de Idade com Máscara */}
+              <div className="mb-4">
+                <label
+                  className="block text-gray-700 font-semibold"
+                  htmlFor="idade"
+                >
+                  Idade
+                </label>
+                <InputMask
+                  mask="99"
+                  id="idade"
+                  name="idade"
+                  value={formData.idade}
+                  onChange={handleInputChange}
+                  placeholder="Digite sua idade"
+                  className="w-full p-3 border rounded-md shadow-sm"
+                />
+              </div>
+
+              {/* Campo de CEP */}
+              <div className="mb-4">
+                <label
+                  className="block text-gray-700 font-semibold"
+                  htmlFor="cep"
+                >
+                  CEP
+                </label>
+                <InputMask
+                  mask="99999-999"
+                  id="cep"
+                  name="cep"
+                  value={formData.cep}
+                  onChange={handleCEPChange}
+                  placeholder="Digite o CEP"
+                  className="w-full p-3 border rounded-md shadow-sm"
+                />
+              </div>
+
+              {/* Campos de Endereço */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="col-span-1">
                   <label
                     className="block text-gray-700 font-semibold"
-                    htmlFor={field}
+                    htmlFor="logradouro"
                   >
-                    {field.charAt(0).toUpperCase() + field.slice(1)}
+                    Logradouro
                   </label>
                   <input
-                    id={field}
-                    name={field}
-                    value={(formData as any)[field]}
+                    id="logradouro"
+                    name="logradouro"
+                    value={formData.logradouro}
                     onChange={handleInputChange}
-                    placeholder={`Digite ${field}`}
-                    className="w-full p-2 border rounded-md"
+                    placeholder="Digite o logradouro"
+                    className="w-full p-3 border rounded-md shadow-sm"
                   />
                 </div>
-              ))}
+                <div className="col-span-1">
+                  <label
+                    className="block text-gray-700 font-semibold"
+                    htmlFor="numeroCasa"
+                  >
+                    Número
+                  </label>
+                  <input
+                    id="numeroCasa"
+                    name="numeroCasa"
+                    value={formData.numeroCasa}
+                    onChange={handleInputChange}
+                    placeholder="Digite o número"
+                    className="w-full p-3 border rounded-md shadow-sm"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 mt-4">
+                <div className="col-span-1">
+                  <label
+                    className="block text-gray-700 font-semibold"
+                    htmlFor="cidade"
+                  >
+                    Cidade
+                  </label>
+                  <input
+                    id="cidade"
+                    name="cidade"
+                    value={formData.cidade}
+                    onChange={handleInputChange}
+                    placeholder="Digite a cidade"
+                    className="w-full p-3 border rounded-md shadow-sm"
+                  />
+                </div>
+                <div className="col-span-1">
+                  <label
+                    className="block text-gray-700 font-semibold"
+                    htmlFor="estado"
+                  >
+                    Estado
+                  </label>
+                  <input
+                    id="estado"
+                    name="estado"
+                    value={formData.estado}
+                    onChange={handleInputChange}
+                    placeholder="Digite o estado"
+                    className="w-full p-3 border rounded-md shadow-sm"
+                  />
+                </div>
+              </div>
+
+              <div className="mb-4 mt-4">
+                <label
+                  className="block text-gray-700 font-semibold"
+                  htmlFor="complemento"
+                >
+                  Complemento
+                </label>
+                <input
+                  id="complemento"
+                  name="complemento"
+                  value={formData.complemento}
+                  onChange={handleInputChange}
+                  placeholder="Digite o complemento (opcional)"
+                  className="w-full p-3 border rounded-md shadow-sm"
+                />
+              </div>
             </form>
+
             <div className="flex justify-between mt-6">
               <button
                 onClick={() => setIsModalOpen(false)}
@@ -349,11 +317,8 @@ const CheckoutPage: React.FC = () => {
               >
                 Cancelar
               </button>
-              <button
-                onClick={handleEnviarPedido}
-                className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md"
-              >
-                Confirmar Pedido
+              <button className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md">
+                Enviar Dados
               </button>
             </div>
           </div>

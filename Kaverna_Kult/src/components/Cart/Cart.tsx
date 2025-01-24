@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useCartHook from "@/hooks/useCart";
 import { CartItem } from "@/types/cartTypes";
 import CheckoutFrete from "./calculadoraFrete/freightCalculator";
+
 
 const Cart: React.FC = () => {
   const {
@@ -26,6 +27,8 @@ const Cart: React.FC = () => {
   const handleClear = () => {
     clearAllItems();
   };
+
+    
 
   const handleToggleSelection = (
     id: number,
@@ -218,6 +221,8 @@ const Cart: React.FC = () => {
           ))}
         </ul>
       </div>
+
+     
 
       <div className="flex flex-col gap-3 justify-between bg-gray-800 text-white p-4 rounded-lg shadow-md mt-6">
         <div className="text-xl flex justify-between font-semibold">
