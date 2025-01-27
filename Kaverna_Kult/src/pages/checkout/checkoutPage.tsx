@@ -1,13 +1,18 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import InputMask from "react-input-mask";
+import { enviarPedido } from "../../services/serviceCheckout/pedidoService";
 
-// Função para buscar o endereço usando a API de CEP
 const buscarEnderecoPorCEP = async (cep: string) => {
-  const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+  const response = await fetch(
+    `https://api.allorigins.win/get?url=${encodeURIComponent(
+      `https://viacep.com.br/ws/${cep}/json/`
+    )}`
+  );
   const data = await response.json();
-  return data;
+  return JSON.parse(data.contents); // A resposta estará em "contents"
 };
+
 
 const CheckoutPage: React.FC = () => {
   const location = useLocation();
@@ -37,6 +42,87 @@ const CheckoutPage: React.FC = () => {
     setIsModalOpen(true);
   };
 
+  const validarFormulario = () => {
+    const camposObrigatorios = [
+      "nome",
+      "telefone",
+      "idade",
+      "cep",
+      "logradouro",
+      "numeroCasa",
+      "cidade",
+      "estado",
+    ];
+    const camposVazios = camposObrigatorios.filter(
+      (campo) => !formData[campo as keyof typeof formData]
+    );
+
+    if (camposVazios.length > 0) {
+      alert(
+        `Preencha todos os campos obrigatórios: ${camposVazios.join(", ")}`
+      );
+      return false;
+    }
+    return true;
+  };
+
+  // Função para enviar os dados
+  const handleEnviarDados = async () => {
+    if (validarFormulario()) {
+      const pedido = {
+        itens: selectedItems.map((item: any) => ({
+          nome: item.name,
+          tamanho: item.selectedSize,
+          cor: item.selectedColor,
+          quantidade: item.quantity,
+          colecao: item.colecao || "default", // Substitua "default" pela lógica correta para coleções
+        })),
+        total: totalPrice,
+        cliente: {
+          nome: formData.nome,
+          telefone: formData.telefone,
+          idade: formData.idade,
+          endereco: {
+            cep: formData.cep,
+            logradouro: formData.logradouro,
+            numeroCasa: formData.numeroCasa,
+            cidade: formData.cidade,
+            estado: formData.estado,
+            complemento: formData.complemento || "",
+          },
+        },
+      };
+  
+      try {
+        const response = await enviarPedido(pedido);
+  
+        if (response.success) {
+          alert("Pedido enviado com sucesso!");
+          setIsModalOpen(false);
+  
+          // Opcional: limpar os dados do formulário e do carrinho
+          setFormData({
+            nome: "",
+            telefone: "",
+            idade: "",
+            cidade: "",
+            estado: "",
+            logradouro: "",
+            numeroCasa: "",
+            complemento: "",
+            cep: "",
+          });
+          localStorage.removeItem("selectedItems");
+        } else {
+          alert(response.message || "Ocorreu um erro ao enviar o pedido.");
+        }
+      } catch (error) {
+        console.error("Erro ao enviar o pedido:", error);
+        alert("Não foi possível enviar o pedido. Tente novamente mais tarde.");
+      }
+    }
+  };
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -44,14 +130,16 @@ const CheckoutPage: React.FC = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Função chamada quando o CEP é preenchido
-  const handleCEPChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setFormData((prev) => ({ ...prev, cep: value }));
+ // Função chamada quando o CEP é preenchido
+const handleCEPChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const { value } = e.target;
+  const cepSomenteNumeros = value.replace(/\D/g, ""); // Remove caracteres não numéricos
+  setFormData((prev) => ({ ...prev, cep: value }));
 
-    // Quando o CEP tiver 8 caracteres, buscamos o endereço
-    if (value.length === 8) {
-      const endereco = await buscarEnderecoPorCEP(value);
+  // Valida se o CEP tem exatamente 8 dígitos antes de fazer a requisição
+  if (cepSomenteNumeros.length === 8) {
+    try {
+      const endereco = await buscarEnderecoPorCEP(cepSomenteNumeros);
 
       // Verifica se o retorno da API contém o endereço
       if (endereco && !endereco.erro) {
@@ -64,8 +152,13 @@ const CheckoutPage: React.FC = () => {
       } else {
         alert("CEP não encontrado.");
       }
+    } catch (error) {
+      console.error("Erro ao buscar o endereço:", error);
+      alert("Não foi possível buscar o endereço. Tente novamente mais tarde.");
     }
-  };
+  }
+};
+
 
   return (
     <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-3xl min-h-screen">
@@ -143,7 +236,9 @@ const CheckoutPage: React.FC = () => {
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white w-full max-w-lg p-6 rounded-lg shadow-lg">
-            <h2 className="text-xl font-bold text-gray-800 mb-6">Dados do Cliente</h2>
+            <h2 className="text-xl font-bold text-gray-800 mb-6">
+              Dados do Cliente
+            </h2>
 
             <form>
               {/* Campo de Nome */}
@@ -317,7 +412,10 @@ const CheckoutPage: React.FC = () => {
               >
                 Cancelar
               </button>
-              <button className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md">
+              <button
+                onClick={handleEnviarDados}
+                className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md"
+              >
                 Enviar Dados
               </button>
             </div>
