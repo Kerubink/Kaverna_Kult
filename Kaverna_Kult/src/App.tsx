@@ -13,6 +13,7 @@ import CheckoutPage from "@/pages/checkout/checkoutPage";
 import LoginPage from "@/pages/login/login";
 import { getAuth } from "firebase/auth";
 import ProdutosPage from "@/pages/admin/adminPages/produtosAdmin";
+import CheckOrderStatusPage from "@/pages/CheckOrderStatusPage/CheckOrderStatusPage";
 
 // Verifica se o usuário está autenticado com o Firebase
 const isAuthenticated = () => {
@@ -48,6 +49,8 @@ function App() {
             <Route path="/produtos" element={<ProductsPage />} />
             <Route path="/contato" element={<Contato />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/checkoutOrder" element={<CheckOrderStatusPage/>} />
+
 
             <Route
               path="/admin"

@@ -8,6 +8,8 @@ import {
   addDoc,
 } from "firebase/firestore";
 import { db } from "@/database/firebase_config";
+import CriarCupom from "../adminComponents/criarCupom";
+import ListarCupons from "../adminComponents/listarCupons";
 
 const ConfiguracoesPage = () => {
   const [bannerImages, setBannerImages] = useState<string[]>([]);
@@ -308,6 +310,12 @@ const ConfiguracoesPage = () => {
           </button>
         )}
       </div>
+
+
+      {/* seciton de cupom */}
+
+      <CriarCupom/>
+      <ListarCupons/>
     </div>
   );
 };

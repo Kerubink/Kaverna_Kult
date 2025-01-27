@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import InputMask from "react-input-mask";
 import { enviarPedido } from "../../services/serviceCheckout/pedidoService";
+import { verificarCupom } from "../../services/serviceCheckout/cupomService";
 
 const buscarEnderecoPorCEP = async (cep: string) => {
   const response = await fetch(
@@ -13,7 +14,6 @@ const buscarEnderecoPorCEP = async (cep: string) => {
   return JSON.parse(data.contents); // A resposta estará em "contents"
 };
 
-
 const CheckoutPage: React.FC = () => {
   const location = useLocation();
   const selectedItems =
@@ -24,6 +24,27 @@ const CheckoutPage: React.FC = () => {
     (acc: number, item: any) => acc + item.price * item.quantity,
     0
   );
+
+  const [cupom, setCupom] = useState(""); // Novo estado para o cupom
+  const [desconto, setDesconto] = useState(0);
+
+  const handleCupomChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCupom(e.target.value);
+  };
+
+  const aplicarDesconto = async () => {
+    if (cupom) {
+      const response = await verificarCupom(cupom);
+      if (response.valido) {
+        setDesconto(response.desconto || 0);
+        alert(`Cupom aplicado com sucesso! Desconto de ${response.desconto}%`);
+      } else {
+        alert(response.mensagem || "Erro ao aplicar o cupom.");
+      }
+    } else {
+      alert("Digite um código de cupom.");
+    }
+  };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -68,6 +89,8 @@ const CheckoutPage: React.FC = () => {
 
   // Função para enviar os dados
   const handleEnviarDados = async () => {
+    const valorComDesconto = totalPrice * (1 - desconto / 100);
+
     if (validarFormulario()) {
       const pedido = {
         itens: selectedItems.map((item: any) => ({
@@ -77,7 +100,13 @@ const CheckoutPage: React.FC = () => {
           quantidade: item.quantity,
           colecao: item.colecao || "default", // Substitua "default" pela lógica correta para coleções
         })),
-        total: totalPrice,
+        totalSemDescontos: totalPrice,
+        descontos: {
+          cupom: cupom, // Adiciona o cupom utilizado
+          desconto: desconto, // Adiciona o desconto aplicado
+          valorComDesconto: valorComDesconto.toFixed(2), // Valor com desconto
+        },
+        timestamp: new Date().toISOString(), // Adiciona o timestamp do pedido
         cliente: {
           nome: formData.nome,
           telefone: formData.telefone,
@@ -92,14 +121,14 @@ const CheckoutPage: React.FC = () => {
           },
         },
       };
-  
+
       try {
         const response = await enviarPedido(pedido);
-  
+
         if (response.success) {
           alert("Pedido enviado com sucesso!");
           setIsModalOpen(false);
-  
+
           // Opcional: limpar os dados do formulário e do carrinho
           setFormData({
             nome: "",
@@ -130,40 +159,41 @@ const CheckoutPage: React.FC = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
- // Função chamada quando o CEP é preenchido
-const handleCEPChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  const { value } = e.target;
-  const cepSomenteNumeros = value.replace(/\D/g, ""); // Remove caracteres não numéricos
-  setFormData((prev) => ({ ...prev, cep: value }));
+  // Função chamada quando o CEP é preenchido
+  const handleCEPChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    const cepSomenteNumeros = value.replace(/\D/g, ""); // Remove caracteres não numéricos
+    setFormData((prev) => ({ ...prev, cep: value }));
 
-  // Valida se o CEP tem exatamente 8 dígitos antes de fazer a requisição
-  if (cepSomenteNumeros.length === 8) {
-    try {
-      const endereco = await buscarEnderecoPorCEP(cepSomenteNumeros);
+    // Valida se o CEP tem exatamente 8 dígitos antes de fazer a requisição
+    if (cepSomenteNumeros.length === 8) {
+      try {
+        const endereco = await buscarEnderecoPorCEP(cepSomenteNumeros);
 
-      // Verifica se o retorno da API contém o endereço
-      if (endereco && !endereco.erro) {
-        setFormData((prev) => ({
-          ...prev,
-          logradouro: endereco.logradouro || "",
-          cidade: endereco.localidade || "",
-          estado: endereco.uf || "",
-        }));
-      } else {
-        alert("CEP não encontrado.");
+        // Verifica se o retorno da API contém o endereço
+        if (endereco && !endereco.erro) {
+          setFormData((prev) => ({
+            ...prev,
+            logradouro: endereco.logradouro || "",
+            cidade: endereco.localidade || "",
+            estado: endereco.uf || "",
+          }));
+        } else {
+          alert("CEP não encontrado.");
+        }
+      } catch (error) {
+        console.error("Erro ao buscar o endereço:", error);
+        alert(
+          "Não foi possível buscar o endereço. Tente novamente mais tarde."
+        );
       }
-    } catch (error) {
-      console.error("Erro ao buscar o endereço:", error);
-      alert("Não foi possível buscar o endereço. Tente novamente mais tarde.");
     }
-  }
-};
-
+  };
 
   return (
-    <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-3xl min-h-screen">
+    <div className="bg-white shadow-lg rounded-lg p-3 w-full max-w-3xl min-h-screen">
       <div className="flex justify-center items-center relative">
-        <Link to="/" className="absolute left-2">
+        <Link to="/" className="absolute left-0">
           <button className="flex justify-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -211,26 +241,49 @@ const handleCEPChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         ))}
       </ul>
 
-      <div className="mt-6 border-t pt-4">
-        <div className="fixed w-full bottom-0 left-0 p-2 flex flex-col gap-4">
-          <div className="flex flex-col gap-2">
-            <div className="flex text-lg gap-2 font-semibold">
-              <span>Subtotal:</span>
-              <span className="text-green-600">R${totalPrice.toFixed(2)}</span>
-            </div>
-            <p className="text-sm font-semibold text-slate-500">
-              O frete será calculado por um vendedor através do WhatsApp após
-              você confirmar o pedido.
-            </p>
-          </div>
-
+      <div className="fixed w-full bottom-0 mt-6 left-0 p-2 flex flex-col gap-4">
+        <div className="flex items-center gap-4">
+          <input
+            type="text"
+            placeholder="Código do cupom"
+            value={cupom}
+            onChange={handleCupomChange}
+            className="w-full p-3 border rounded-md shadow-sm"
+          />
           <button
-            onClick={handleConfirmarPedido}
-            className="w-full bg-green-500 hover:bg-green-600 text-white py-3 px-6 rounded-lg text-lg font-medium shadow-md transition duration-200"
+            onClick={aplicarDesconto}
+            className="px-4 py-2 text-white bg-blue-600 rounded-md"
           >
-            Confirmar Pedido
+            Aplicar
           </button>
         </div>
+        <div className="flex flex-col border-t gap-2">
+          <div className="flex text-lg gap-2 font-semibold">
+            <span>Subtotal:</span>
+            <span className="text-black">R${totalPrice.toFixed(2)}</span>
+          </div>
+          <div className="flex text-lg gap-2 font-semibold">
+            <span>Desconto:</span>
+            <span className="text-green-600">-{desconto}%</span>
+          </div>
+          <div className="flex text-lg gap-2 font-semibold">
+            <span>Total:</span>
+            <span className="text-green-600">
+              R${(totalPrice * (1 - desconto / 100)).toFixed(2)}
+            </span>
+          </div>
+          <p className="text-sm font-semibold text-slate-400">
+            O frete será calculado por um vendedor através do WhatsApp após você
+            confirmar o pedido.
+          </p>
+        </div>
+
+        <button
+          onClick={handleConfirmarPedido}
+          className="w-full bg-green-500 hover:bg-green-600 text-white py-3 px-6 rounded-lg text-lg font-medium shadow-md transition duration-200"
+        >
+          Confirmar Pedido
+        </button>
       </div>
 
       {isModalOpen && (

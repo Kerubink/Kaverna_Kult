@@ -1,5 +1,5 @@
 // src/services/pedidoService.ts
-import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { getFirestore, collection, addDoc, Timestamp } from "firebase/firestore";
 
 interface Pedido {
   itens: {
@@ -22,6 +22,7 @@ interface Pedido {
       numeroCasa: string;
       complemento?: string;
     };
+    dataHora?: Timestamp; // Campo para data e hora
   };
 }
 
