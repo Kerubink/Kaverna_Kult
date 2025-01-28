@@ -9,6 +9,7 @@ import Carrossel from "@/components/carrossel/carrossel";
 import CategoryCarousel from "@/components/layout/category/categoryCarrossel";
 import CarrosselPromo from "@/components/carrossel/carrosselPromo/carrosselPromo";
 import ProdutosPopulares from "@/components/product/productPopu/productPopu";
+import ButtonRastreio from "@/components/buttons/buttonRastreio/Rastreio";
 
 function Home() {
   return (
@@ -29,6 +30,8 @@ function Home() {
       <BannerPromotion />
       <CollectionsSection />
       <BannerInsta />
+
+      <ButtonRastreio />
     </>
   );
 }

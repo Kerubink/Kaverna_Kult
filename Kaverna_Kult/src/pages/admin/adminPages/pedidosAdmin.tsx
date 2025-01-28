@@ -8,14 +8,15 @@ const PedidosPage: React.FC = () => {
 
   // Estados possíveis para o pedido
   const orderStates = [
-    "Em Análise",
+    "Recebido",
     "Pagamento Pendente",
-    "Confirmado",
-    "Enviado para a Gráfica",
+    "Pagamento Confirmado",
+    "Em Produção",
     "Empacotando",
     "Enviado",
     "A Caminho",
-    "Finalizado",
+    "Entregue",
+    "Cancelado"
   ];
 
   // Carrega os pedidos do Firestore
@@ -45,7 +46,7 @@ const PedidosPage: React.FC = () => {
   
     try {
       await updateDoc(orderRef, {
-        stutus: {
+        status: {
           statusAtual: newStatus,
           updatedAt: currentTimestamp,
         }
