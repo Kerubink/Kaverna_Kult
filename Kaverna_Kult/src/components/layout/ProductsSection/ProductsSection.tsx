@@ -68,8 +68,8 @@ const ProductsSection: React.FC = () => {
             key={type}
             className={`px-4 py-2 rounded-3xl  ${
               filter === type
-                ? "bg-white text-black font-semibold"
-                : "bg-transparent  border-slate-500 border-[0.2px] hover:bg-gray-600 text-gray-200"
+                ? "bg-purple-500 text-white font-semibold"
+                : "bg-transparent border-purple-500 border-[0.2px] hover:bg-gray-600 text-gray-200"
             }`}
             onClick={() => handleFilterChange(type)}
           >
