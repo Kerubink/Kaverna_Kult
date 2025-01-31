@@ -46,24 +46,36 @@ function ProdutosPopulares() {
         <div className="w-full overflow-x-scroll scrollbar-hide flex gap-4 p-2">
           {produtosPopulares.map((produto) => (
             <div
-              key={produto.id}
-              className="flex-shrink-0 w-40 rounded-lg shadow-md bg-white p-2"
-              onClick={() => openModal(produto)}
-            >
-              <img
-                src={produto.image}
-                alt={produto.name}
-                className="w-full h-32 object-cover rounded-md"
-              />
-              <div className="mt-2 text-center">
-                <h3 className="text-sm font-semibold">{produto.name}</h3>
-                <p className="text-gray-500 text-sm">
-                  {produto.price
-                    ? `R$ ${Number(produto.price).toFixed(2)}`
-                    : "Preço indisponível"}
+            key={produto.id}
+            className="rounded-md w-[152px] overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+            onClick={() => openModal(produto)}
+          >
+            <div className="h-48 flex items-center rounded-md justify-center">
+              {produto.image ? (
+                <img
+                  src={produto.image}
+                  alt={produto.name}
+                  className="h-full w-full object-cover rounded-md"
+                />
+              ) : (
+                <span className="text-gray-400">Sem Imagem</span>
+              )}
+            </div>
+            <div className="">
+              <div className="flex items-center text-white justify-between mt-1">
+                <h2 className="text-sm font-semibold">{produto.name}</h2>
+                <p className="text-sm font-bold">
+                  {new Intl.NumberFormat("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  }).format(produto.price)}
                 </p>
               </div>
+              <p className="text-gray-400 text-sm">
+                {produto.pattern || "sem classificação"}
+              </p>
             </div>
+          </div>
           ))}
         </div>
       ) : (

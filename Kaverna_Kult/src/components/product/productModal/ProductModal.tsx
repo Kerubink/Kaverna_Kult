@@ -68,17 +68,14 @@ const ProductModal: React.FC = () => {
         <div className="absolute top-5 z-50 flex items-center justify-between w-full px-4 text-black ">
           <button
             onClick={closeModal}
-            className=" text-2xl text-gray-400 hover:text-black "
+            className=" text-2xl absolute flex items-center justify-center text-gray-400 hover:text-black "
           >
-            <i className="fi fi-rr-arrow-left"></i>
+            <i className="fi fi-rr-arrow-left flex"></i>
           </button>
 
           <div className="ml-auto mr-auto">
             <div className="flex justify-between items-center">
               <div className="flex flex-col justify-between">
-                {/* <span className="text-[10px] text-gray-400">
-                  {product.collection}
-                </span> */}
                 <h2 className="text-xl font-bold">{product.name}</h2>
               </div>
             </div>
@@ -125,18 +122,18 @@ const ProductModal: React.FC = () => {
         <div className={`gap-4 overflow-auto ${styles.contentInf}`}>
           
 
-          {/* Seleção de Cor, Tamanho e Quantidade */}
-          <div className="flex justify-between gap-4">
-            <div className="flex  flex-col justify-between">
+          {/* Seleção de Cor, Tamanho */}
+          <div className="flex max-w-full justify-between gap-4">
+            <div className="flex flex-col justify-between">
               <label className="block text-gray-300 mb-2">Cor</label>
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-wrap">
                 {product.colors?.map((color, index) => (
                   <button
                     key={index}
                     style={{ backgroundColor: color }}
                     className={`w-8 h-8 rounded-md border-2 ${
                       selectedColor === color
-                        ? "border-blue-600"
+                        ? "border-purple-500"
                         : "border-[#ccc]"
                     }`}
                     onClick={() => setSelectedColor(color)}
@@ -145,15 +142,15 @@ const ProductModal: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex flex-col  justify-between">
+            <div className="flex flex-col justify-between">
               <label className="block text-gray-300 mb-2">Tamanho</label>
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-wrap">
                 {product.sizes?.map((size, index) => (
                   <label
                     key={index}
-                    className={`w-8 h-8 flex items-center justify-center rounded-md border-2 ${
+                    className={`w-8 h-8 flex items-center  justify-center rounded-md border-2 ${
                       selectedSize === size
-                        ? "text-white border-blue-600"
+                        ? "text-white border-purple-500"
                         : "text-white border-gray-300"
                     } cursor-pointer`}
                   >
@@ -168,10 +165,9 @@ const ProductModal: React.FC = () => {
                   </label>
                 ))}
               </div>
-              
             </div>
-            
           </div>
+
           <div>
             <label className="block text-gray-300 mb-2">Descrição</label>
             <p className="text-sm text-gray-400 text-justify">{product.description}
@@ -202,7 +198,7 @@ const ProductModal: React.FC = () => {
           </div>
 
           <button
-            className="bg-white text-black font-bold rounded-lg p-2"
+            className="bg-purple-600 text-white font-bold rounded-lg p-2"
             onClick={handleAddToCart}
           >
             Adicionar ao Carrinho

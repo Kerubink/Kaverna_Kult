@@ -17,6 +17,7 @@ const PRODUCT_TYPES = {
       "gallery",
       "shippingDetails",
       "gender",
+      "category"
     ],
   },
   acessorio: {

@@ -245,7 +245,7 @@ const Cart: React.FC = () => {
         <div className="flex">
           <button
             onClick={handleFinalize}
-            className="bg-green-500 w-full text-white px-6 py-2 rounded-lg hover:bg-green-600"
+            className="bg-purple-500 w-full font-bold text-white px-6 py-2 rounded-lg hover:bg-purple-600"
           >
             Finalizar Compra
           </button>
