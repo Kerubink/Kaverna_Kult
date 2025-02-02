@@ -68,7 +68,7 @@ const ProductsSection: React.FC = () => {
             key={type}
             className={`px-4 py-2 rounded-3xl  ${
               filter === type
-                ? "bg-purple-500 text-white font-semibold"
+                ? " bg-gradient-to-bl from-violet-500 to-fuchsia-500 text-white font-semibold"
                 : "bg-transparent border-purple-500 border-[0.2px] hover:bg-gray-600 text-gray-200"
             }`}
             onClick={() => handleFilterChange(type)}

@@ -23,7 +23,7 @@ function Navbar() {
     <div className="p-3 flex flex-col gap-3 fixed left-1/2 top-2 translate-x-[-50%] w-[95%] rounded-lg z-50 backdrop-blur-xl bg-black/50 text-white">
       <div className="flex items-center justify-between gap-4 relative">
         <Link to="/">
-          <img src="logo.png" alt="Logo" className="w-10 h-10" />
+          <img src="logo1.png" alt="Logo" className="w-10 h-10" />
         </Link>
 
         <div className="absolute left-1/2 transform -translate-x-1/2 text-center font-bold">
@@ -50,7 +50,7 @@ function Navbar() {
                 </svg>
               </button>
             </SheetTrigger>
-            <SheetContent className="flex flex-col p-1">
+            <SheetContent className="flex flex-col p-1 ">
               <SheetHeader>
                 <SheetTitle>Meu carrinho</SheetTitle>
               </SheetHeader>
