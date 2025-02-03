@@ -24,16 +24,16 @@ const CategoryCarousel: React.FC = () => {
   };
 
   return (
-    <section className="mt-2">
-      <div className="overflow-x-scroll flex gap-4 scrollbar-hide text-white">
+    <section className="mt-3">
+      <div className="overflow-x-scroll flex gap-4 px-2 scrollbar-hide text-white">
         {categories.map((category) => (
           <div
             key={category.id}
-            className="flex flex-col items-center justify-center min-w-20 h-24 rounded-lg shadow px-3 cursor-pointer hover:bg-gray-600"
+            className="flex flex-col items-center justify-center min-w-16 h-18 rounded-lg shadow px-3 cursor-pointer"
             onClick={() => handleCategoryClick(category.name)}
           >
-            <div className="p-2 rounded-full bg-slate-100/20">{category.icon}</div>
-            <span className="text-sm text-center">{category.name}</span>
+            <div className="p-2 rounded-full w-12 bg-slate-100/20">{category.icon}</div>
+            <span className="text-[12px] font-semibold text-center">{category.name}</span>
           </div>
         ))}
       </div>

@@ -33,7 +33,7 @@ function Carrossel() {
           <div
             className="h-full w-full bg-cover bg-center flex justify-center items-center"
             style={{
-              backgroundImage: `url('https://via.placeholder.com/1200x600/ff7f7f/333333')`,
+              backgroundImage: `url('./a.jpeg')`,
             }}
           >
             
@@ -43,7 +43,7 @@ function Carrossel() {
           <div
             className="h-full w-full bg-cover bg-center flex justify-center items-center"
             style={{
-              backgroundImage: `url('https://via.placeholder.com/1200x600/7f7fff/333333')`,
+              backgroundImage: `url('b.jpeg')`,
             }}
           >
             

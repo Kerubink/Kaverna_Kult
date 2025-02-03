@@ -66,10 +66,10 @@ const ProductsSection: React.FC = () => {
         {estampas.map((type) => (
           <button
             key={type}
-            className={`px-4 py-2 rounded-3xl  ${
+            className={`px-2 py-2 rounded-3xl text-sm  ${
               filter === type
-                ? " bg-gradient-to-bl from-violet-500 to-fuchsia-500 text-white font-semibold"
-                : "bg-transparent border-purple-500 border-[0.2px] hover:bg-gray-600 text-gray-200"
+                ? "bg-gradient-to-bl from-violet-500 to-fuchsia-500 text-white font-semibold"
+                : "bg-transparent border-purple-500 border-[0.2px] font-semibold hover:bg-gradient-to-bl from-violet-500/30 to-fuchsia-500/30 text-gray-200"
             }`}
             onClick={() => handleFilterChange(type)}
           >
@@ -79,7 +79,7 @@ const ProductsSection: React.FC = () => {
       </div>
 
       <div className="flex flex-col flex-1 justify-between my-4 ">
-        <div className="w-3/2 fel gap-2 flex justify-between mx-auto px-4">
+        <div className="w-3/2 fel gap-2 flex justify-between mx-auto px-2">
           <div className="grid grid-cols-2 flex-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
             {currentProducts.map((product) => (
               <div

@@ -17,7 +17,7 @@ function ButtonRastreio() {
   return (
     <Link to={"/checkoutOrder"}>
       <button
-        className={`bg-slate-600 fixed bottom-4 right-4 text-white font-bold h-12 gap-2 flex items-center justify-center rounded-full opacity-50  transition-all duration-500 ${
+        className={`bg-gradient-to-bl from-violet-500 to-fuchsia-500 fixed bottom-4 right-4 text-white font-bold h-12 gap-2 flex items-center justify-center rounded-full opacity-50  transition-all duration-500 ${
           expanded ? "w-[200px] px-4 opacity-100 flex items-center justify-center" : "w-12"
         }`}
       >

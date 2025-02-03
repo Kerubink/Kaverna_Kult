@@ -1,7 +1,7 @@
 function BannerInsta() {
     return ( 
         <section className="bg-black text-white py-12">
-          <div className="max-w-7xl mx-auto px-4 text-center">
+          <div className="max-w-7xl mx-auto px-2 text-center">
             {/* Título */}
             <h2 className="text-3xl font-bold mb-4">
               Siga a gente no Instagram
@@ -14,12 +14,12 @@ function BannerInsta() {
             </p>
 
             {/* Container de Imagens */}
-            <div className="flex gap-1  justify-center items-center">
+            <div className="flex gap-1 justify-center items-center">
               {Array.from({ length: 3 }).map((_, index) => (
                 <div
                   key={index}
-                  className={`w-1/4 bg-slate-600 ${
-                    index % 2 === 0 ? "h-[200px]" : "h-[250px]"
+                  className={`w-1/3 bg-slate-600 ${
+                    index % 2 === 0 ? "h-[200px]" : "h-[230px]"
                   }`}
                 >
                   {/* Imagem Simulada */}

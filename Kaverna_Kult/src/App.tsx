@@ -15,6 +15,7 @@ import ProdutosPage from "@/pages/admin/adminPages/produtosAdmin";
 import CheckOrderStatusPage from "@/pages/CheckOrderStatusPage/CheckOrderStatusPage";
 import { AuthProvider } from "@/contexts/protect/authContext";
 import ProtectedRoute from "./components/protect/ProtectedRoute";
+import ScannerPage from "./pages/ScannerAR/scanner";
 
 function App() {
   const location = useLocation();
@@ -43,6 +44,7 @@ function App() {
               <Route path="/produtos" element={<ProductsPage />} />
               <Route path="/contato" element={<Contato />} />
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/Scanner" element={<ScannerPage />} />
               <Route path="/checkoutOrder" element={<CheckOrderStatusPage />} />
 
               <Route

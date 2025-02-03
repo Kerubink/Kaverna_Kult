@@ -34,16 +34,16 @@ function ProdutosPopulares() {
   }, []);
 
   return (
-    <section className="p-2">
-      <div className="text-white">
+    <section className="">
+      <div className="text-white m-2">
         <h1 className="text-lg font-extralight">Populares</h1>
         <hr className="w-[50px] h-[3.5px] mt-1 bg-primary-dark" />
       </div>
 
       {isLoading ? (
-        <p className="text-white text-sm mt-4">Carregando produtos...</p>
+        <p className="text-white text-sm m-2 mt-4">Carregando produtos...</p>
       ) : produtosPopulares.length > 0 ? (
-        <div className="w-full overflow-x-scroll scrollbar-hide flex gap-4 p-2">
+        <div className="w-full p-2 overflow-x-scroll scrollbar-hide flex gap-4">
           {produtosPopulares.map((produto) => (
             <div
             key={produto.id}
