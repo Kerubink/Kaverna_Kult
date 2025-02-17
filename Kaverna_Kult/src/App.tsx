@@ -16,6 +16,9 @@ import CheckOrderStatusPage from "@/pages/CheckOrderStatusPage/CheckOrderStatusP
 import { AuthProvider } from "@/contexts/protect/authContext";
 import ProtectedRoute from "./components/protect/ProtectedRoute";
 import ScannerPage from "./pages/ScannerAR/scanner";
+import ArtistsAdmin from "./pages/admin/adminPages/artistsAdmin";
+import ArtistPage from "./pages/artistPage/artistPage";
+import { ProductModalProvider } from "./contexts/productModalContext/ProductModalContext";
 
 function App() {
   const location = useLocation();
@@ -27,44 +30,56 @@ function App() {
 
   return (
     <AuthProvider>
-      <CartProvider>
-        <div
-          className={`flex flex-col min-h-screen relative bg-black ${
-            isAdminRoute || isCheckoutRoute || isLoginRoute
-              ? ""
-              : "with-navbar-footer"
-          }`}
-        >
-          {/* Renderiza a Navbar apenas se não for uma rota de admin nem a rota de checkout */}
-          {!isAdminRoute && !isCheckoutRoute && !isLoginRoute && <Navbar />}
+      <ProductModalProvider>
+        <CartProvider>
+          <div
+            className={`flex flex-col min-h-screen relative bg-black ${
+              isAdminRoute || isCheckoutRoute || isLoginRoute 
+                ? ""
+                : "with-navbar-footer"
+            }`}
+          >
+            {/* Renderiza a Navbar apenas se não for uma rota de admin nem a rota de checkout */}
+            {!isAdminRoute &&
+              !isCheckoutRoute &&
+              !isLoginRoute &&
+              <Navbar />}
 
-          <main className="flex-1">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/produtos" element={<ProductsPage />} />
-              <Route path="/contato" element={<Contato />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/Scanner" element={<ScannerPage />} />
-              <Route path="/checkoutOrder" element={<CheckOrderStatusPage />} />
+            <main className="flex-1">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/produtos" element={<ProductsPage />} />
+                <Route path="/contato" element={<Contato />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/Scanner" element={<ScannerPage />} />
+                <Route
+                  path="/checkoutOrder"
+                  element={<CheckOrderStatusPage />}
+                />
 
-              <Route
-                path="/admin"
-                element={<ProtectedRoute element={<DashboardPage />} />}
-              >
-                <Route path="produtos" element={<ProdutosPage />} />
-                <Route path="pedidos" element={<PedidosPage />} />
-                <Route path="configuracoes" element={<ConfiguracoesPage />} />
-              </Route>
+                {/* Nova rota para a página do artista */}
+                <Route path="/artist/:artistId" element={<ArtistPage />} />
 
-              <Route path="/checkout" element={<CheckoutPage />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </main>
+                <Route
+                  path="/admin"
+                  element={<ProtectedRoute element={<DashboardPage />} />}
+                >
+                  <Route path="produtos" element={<ProdutosPage />} />
+                  <Route path="pedidos" element={<PedidosPage />} />
+                  <Route path="artistas" element={<ArtistsAdmin />} />
+                  <Route path="configuracoes" element={<ConfiguracoesPage />} />
+                </Route>
 
-          {/* Renderiza o Footer apenas se não for uma rota de admin */}
-          {!isAdminRoute && !isCheckoutRoute && <Footer />}
-        </div>
-      </CartProvider>
+                <Route path="/checkout" element={<CheckoutPage />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </main>
+
+            {/* Renderiza o Footer apenas se não for uma rota de admin */}
+            {!isAdminRoute && !isCheckoutRoute && <Footer />}
+          </div>
+        </CartProvider>
+      </ProductModalProvider>
     </AuthProvider>
   );
 }

@@ -14,6 +14,9 @@ const Sidebar = () => {
           <Link to="/admin/pedidos" className="block py-2 px-4 hover:bg-gray-700 rounded">Pedidos</Link>
         </li>
         <li>
+          <Link to="/admin/artistas" className="block py-2 px-4 hover:bg-gray-700 rounded">Artistas</Link>
+        </li>
+        <li>
           <Link to="/admin/configuracoes" className="block py-2 px-4 hover:bg-gray-700 rounded">Configurações</Link>
         </li>
       </ul>

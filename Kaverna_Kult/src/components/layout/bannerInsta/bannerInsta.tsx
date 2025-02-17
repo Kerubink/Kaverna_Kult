@@ -18,7 +18,7 @@ function BannerInsta() {
               {Array.from({ length: 3 }).map((_, index) => (
                 <div
                   key={index}
-                  className={`w-1/3 bg-slate-600 ${
+                  className={`w-1/3 bg-slate-600 rounded-lg ${
                     index % 2 === 0 ? "h-[200px]" : "h-[230px]"
                   }`}
                 >
