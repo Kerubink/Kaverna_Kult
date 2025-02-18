@@ -4,7 +4,7 @@ function Footer() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             <div>
-              <h3 className="text-lg font-semibold mb-4">Sobre Nós</h3>
+              <h3 className="text-lg font-semibold mb-4">Sobre nós</h3>
               <p className="text-sm text-gray-400">
                 Somos uma loja especializada em camisetas personalizadas,
                 trazendo estilo e exclusividade para o seu dia a dia.
@@ -12,11 +12,37 @@ function Footer() {
             </div>
 
             <div>
-              <h3 className="text-lg font-semibold mb-4">Links Rápidos</h3>
+              <h3 className="text-lg font-semibold mb-4">Links rápidos</h3>
               <ul className="text-sm text-gray-400 space-y-2">
                 <li>
                   <a href="#produtos" className="hover:text-gray-200">
                     Produtos
+                  </a>
+                </li>
+                <li>
+                  <a href="#sobre" className="hover:text-gray-200">
+                    Sobre
+                  </a>
+                </li>
+                <li>
+                  <a href="#contato" className="hover:text-gray-200">
+                    Contato
+                  </a>
+                </li>
+                <li>
+                  <a href="#ajuda" className="hover:text-gray-200">
+                    Ajuda
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Saiba mais</h3>
+              <ul className="text-sm text-gray-400 space-y-2">
+                <li>
+                  <a href="souArtista" className="hover:text-gray-200">
+                    Sou artista ✨
                   </a>
                 </li>
                 <li>
@@ -46,7 +72,7 @@ function Footer() {
             </div>
 
             <div>
-              <h3 className="text-lg font-semibold mb-4">Redes Sociais</h3>
+              <h3 className="text-lg font-semibold mb-4">Redes sociais</h3>
               <div className="flex space-x-4">
                 <a
                   href="https://facebook.com"

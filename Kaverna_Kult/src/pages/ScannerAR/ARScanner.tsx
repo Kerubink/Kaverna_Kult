@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import * as MindAR from "mind-ar";
 
 const ARScanner: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);

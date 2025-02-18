@@ -1,7 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useProductModal } from "@/contexts/productModalContext/ProductModalContext";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/database/firebase_config"; // Certifique-se de que o caminho está correto
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"; // Importe os componentes da paginação
 
 const ProductsSection: React.FC = () => {
   const { openModal } = useProductModal();
@@ -37,17 +46,15 @@ const ProductsSection: React.FC = () => {
 
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
   const startIndex = (currentPage - 1) * productsPerPage;
-  const currentProducts = filteredProducts.slice(
-    startIndex,
-    startIndex + productsPerPage
+  const currentProducts = useMemo(
+    () => filteredProducts.slice(startIndex, startIndex + productsPerPage),
+    [filteredProducts, currentPage]
   );
 
-  const handlePrevPage = () => {
-    setCurrentPage((prev) => Math.max(prev - 1, 1));
-  };
-
-  const handleNextPage = () => {
-    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
   };
 
   const handleFilterChange = (selectedFilter: string) => {
@@ -55,11 +62,21 @@ const ProductsSection: React.FC = () => {
     setCurrentPage(1); // Volta para a primeira página ao mudar o filtro
   };
 
+  const handlePrevPage = (e: React.MouseEvent) => {
+    e.preventDefault(); // Previne o comportamento padrão
+    handlePageChange(currentPage - 1);
+  };
+
+  const handleNextPage = (e: React.MouseEvent) => {
+    e.preventDefault(); // Previne o comportamento padrão
+    handlePageChange(currentPage + 1);
+  };
+
   return (
-    <section className="w-full flex flex-col min-h-screen bg-black text-white">
+    <section id="produtos" className="w-full flex flex-col min-h-screen bg-black text-white">
       <div className="m-2">
         <h1 className="text-lg font-extralight text-l">Produtos</h1>
-        <hr className="w-[50px] h-[3.5px] mt-1 bg-primary-dark"/>
+        <hr className="w-[50px] h-[3.5px] mt-1 bg-primary-dark" />
       </div>
       {/* Filtro por Tipo de Estampa */}
       <div className="flex overflow-auto gap-2 p-2">
@@ -78,7 +95,7 @@ const ProductsSection: React.FC = () => {
         ))}
       </div>
 
-      <div className="flex flex-col flex-1 justify-between my-4 ">
+      <div className="flex flex-col flex-1 justify-between my-4">
         <div className="w-3/2 fel gap-2 flex justify-between mx-auto px-2">
           <div className="grid grid-cols-2 flex-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
             {currentProducts.map((product) => (
@@ -117,26 +134,34 @@ const ProductsSection: React.FC = () => {
           </div>
         </div>
 
-        {/* Navegação de Páginas */}
-        <div className="flex justify-center items-center mt-6">
-          <button
-            className="px-4 py-2 mx-2 bg-gray-700 rounded-md hover:bg-gray-600 disabled:bg-gray-800 disabled:cursor-not-allowed"
-            onClick={handlePrevPage}
-            disabled={currentPage === 1}
-          >
-            Anterior
-          </button>
-          <span className="text-gray-400">
-            Página {currentPage} de {totalPages}
-          </span>
-          <button
-            className="px-4 py-2 mx-2 bg-gray-700 rounded-md hover:bg-gray-600 disabled:bg-gray-800 disabled:cursor-not-allowed"
-            onClick={handleNextPage}
-            disabled={currentPage === totalPages}
-          >
-            Próxima
-          </button>
-        </div>
+        {/* Paginação usando Shadcn UI */}
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                href="#"
+                onClick={handlePrevPage}
+                disabled={currentPage === 1 || currentProducts.length === 0}
+              />
+            </PaginationItem>
+            {/* Exibe a página atual */}
+            <PaginationItem>
+              <PaginationLink href="#">
+                {currentPage}
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationEllipsis />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext
+                href="#"
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages || currentProducts.length === 0}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       </div>
     </section>
   );
