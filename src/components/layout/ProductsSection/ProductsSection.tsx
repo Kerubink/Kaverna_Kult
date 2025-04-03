@@ -97,14 +97,14 @@ const ProductsSection: React.FC = () => {
 
       <div className="flex flex-col flex-1 justify-between my-4">
         <div className="w-full max-w-screen flex gap-2 justify-between mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 w-full">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 w-full">
             {currentProducts.map((product) => (
               <div
                 key={product.id}
                 className="rounded-md overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer"
                 onClick={() => openModal(product)}
               >
-                <div className=" flex items-center rounded-md justify-center">
+                <div className="h-48 flex items-center rounded-md justify-center">
                   {product.image ? (
                     <img
                       src={product.image}
