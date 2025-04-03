@@ -1,0 +1,30 @@
+.custom_prev,
+.custom_next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.custom_prev {
+  left: 10px;
+}
+
+.custom_next {
+  right: 10px;
+}
+
+.custom_prev:hover,
+.custom_next:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
