@@ -1,15 +1,17 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "@/contexts/protect/authContext";
 
-const ProtectedRoute = ({ element }: { element: JSX.Element }) => {
-  const { user, loading } = useAuth();
+const ProtectRoute = () => {
+  const { user, role, loading } = useAuth();
 
-  if (loading) {
-    // Mostre um spinner ou tela de carregamento enquanto verifica o estado da autenticação
-    return <div>Carregando...</div>;
-  }
+  if (loading) return <p>Carregando...</p>;
 
-  return user ? element : <Navigate to="/login" />;
+  if (!user) return <Navigate to="/login" replace />;
+
+  if (role === "admin") return <Navigate to="/admin/home" replace />;
+  if (role === "artist") return <Navigate to="/artist/home" replace />;
+
+  return <Outlet />;
 };
 
-export default ProtectedRoute;
+export default ProtectRoute;

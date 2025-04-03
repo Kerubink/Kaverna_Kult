@@ -51,7 +51,7 @@ const ArtistLoginForm = () => {
         if (artistData.status === "pending") {
           setStatusMessage("Seu perfil ainda está em análise. Aguarde a aprovação.");
         } else if (artistData.status === "accepted") {
-          navigate(`/artist-dashboard/${user.uid}`);
+          navigate(`/artist/${user.uid}`);
         }
       } else {
         setLoginError("Perfil não encontrado ou dados inválidos.");

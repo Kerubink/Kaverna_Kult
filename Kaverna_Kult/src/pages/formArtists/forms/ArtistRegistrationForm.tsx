@@ -72,20 +72,7 @@ const ArtistRegistrationForm = () => {
     setError({});
     setStatusMessage("");
   
-    const {
-      email,
-      password,
-      contato,
-      fullName,
-      portfolioLink,
-      description,
-      username,
-      profileImage,
-      banner,
-      popularity,
-      totalProducts,
-      totalSales,
-    } = formData;
+    const { email, password, fullName, username, contato, portfolioLink, description } = formData;
   
     try {
       const auth = getAuth();
@@ -96,6 +83,21 @@ const ArtistRegistrationForm = () => {
       await sendEmailVerification(user);
   
       const db = getFirestore();
+  
+      // Criar usuário na coleção "users"
+      const userDocRef = doc(db, "users", user.uid);
+      await setDoc(userDocRef, {
+        uid: user.uid,
+        email,
+        fullName,
+        username,
+        contato,
+        role: "artist", // O usuário ainda não foi aprovado
+        status: "pending",
+        createdAt: new Date(),
+      });
+  
+      // Criar artista na coleção "artists_pending"
       const artistDocRef = doc(db, "artists_pending", user.uid);
       await setDoc(artistDocRef, {
         fullName,
@@ -111,6 +113,7 @@ const ArtistRegistrationForm = () => {
         totalSales: 0,
         status: "pending",
         uid: user.uid,
+        createdAt: new Date(),
       });
   
       setFormData({
@@ -128,7 +131,7 @@ const ArtistRegistrationForm = () => {
         profileImage: "",
       });
   
-      setStatusMessage("Cadastro realizado com sucesso! Verifique seu e-mail para confirmar sua conta.");
+      setStatusMessage("Cadastro realizado! Verifique seu e-mail para confirmar sua conta.");
   
     } catch (err) {
       console.error("Erro ao registrar:", err);
